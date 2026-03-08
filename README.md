@@ -134,7 +134,7 @@ Plans, specifications, and session logs survive auto-compression and session bou
 | `python-code-conventions` | `*.py`, `*.ipynb` | Python coding standards |
 | `tikz-visual-quality` | `.tex` | TikZ diagram visual standards |
 | `replication-protocol` | `*.py`, `*.ipynb` | Replicate original results before extending |
-| `pdf-processing` | `master_supporting_docs/` | Safe large PDF handling |
+| `pdf-processing` | `related_work/` | Safe large PDF handling |
 | `proofreading-protocol` | `.tex`, `quality_reports/` | Propose-first, then apply with approval |
 | `knowledge-base-template` | `.tex`, `*.py` | Notation/application registry template |
 | `orchestrator-research` | `*.py`, `explorations/` | Simple orchestrator for research |
