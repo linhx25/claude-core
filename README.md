@@ -44,12 +44,12 @@ claude-core/
 git clone <this-repo-url> ./claude-core
 
 # 2. Start a new task (creates folders, branch, copies CLAUDE.md)
-bash ./claude-core/templates/new-task-setup.sh research my-paper ./projects/my-paper
+bash ./claude-core/templates/new-task-setup.sh research my-paper <your-directory>
 
 # 3. Update CLAUDE.md manually: fill in task name, description, Active Task table
 
 # 4. start Claude Code
-cd ./projects/my-paper
+cd <your-directory>
 claude
 
 # 5. Claude reads CLAUDE.md, drafts the spec
