@@ -17,7 +17,7 @@ set -euo pipefail
 BRANCH_TYPE="${1:-}"
 TASK_NAME="${2:-}"
 PROJECT_ROOT="${3:-$(pwd)}"
-CORE_REPO="$HOME/.claude-core"
+CORE_REPO="${CLAUDE_PROJECT_DIR:-$(pwd)}/claude-core"
 
 # ── Validation ────────────────────────────────────────────────────────────────
 
@@ -29,7 +29,7 @@ fi
 
 if [ ! -d "$CORE_REPO" ]; then
   echo "Error: claude-core not found at $CORE_REPO"
-  echo "Clone it first: git clone <your-core-repo-url> ~/.claude-core"
+  echo "Clone it first: git clone <your-core-repo-url> ~/claude-core"
   exit 1
 fi
 
@@ -54,7 +54,7 @@ fi
 # ── Create branch ─────────────────────────────────────────────────────────────
 
 git checkout -b "$BRANCH_NAME" 2>/dev/null || git checkout "$BRANCH_NAME"
-echo "On branch: $BRANCH_NAME"
+echo "On branch: $BRANCH_NAME (local only — will not push unless you run /commit --push)"
 
 # ── Symlink .claude/ to core ──────────────────────────────────────────────────
 
@@ -126,10 +126,6 @@ case "$BRANCH_TYPE" in
   dev)
     mkdir -p src tests docs scripts
     echo "Created: dev structure (src/, tests/, docs/)"
-    ;;
-  exploration)
-    mkdir -p explorations output
-    echo "Created: exploration structure (explorations/, output/)"
     ;;
 esac
 

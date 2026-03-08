@@ -40,13 +40,20 @@ claude-core/
 ## Setup
 
 ```bash
-# Clone as your core
-git clone <this-repo-url> ~/.claude-core
+# 1. Clone as your core
+git clone <this-repo-url> ./claude-core
 
-# Start a new task
-bash ~/.claude-core/templates/new-task-setup.sh research my-paper ~/projects/my-paper
-bash ~/.claude-core/templates/new-task-setup.sh analysis housing-data ~/projects/housing
-bash ~/.claude-core/templates/new-task-setup.sh dev my-api ~/projects/api
+# 2. Start a new task (creates folders, branch, copies CLAUDE.md)
+bash ./claude-core/templates/new-task-setup.sh research my-paper ./projects/my-paper
+
+# 3. Update CLAUDE.md manually: fill in task name, description, Active Task table
+
+# 4. start Claude Code
+cd ./projects/my-paper
+claude
+
+# 5. Claude reads CLAUDE.md, drafts the spec
+/start-task
 ```
 
 ## Architecture: Six Layers

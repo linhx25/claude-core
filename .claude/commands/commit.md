@@ -1,16 +1,22 @@
 ---
 name: commit
 description: >
-  Stage, quality-check, commit, and optionally create a PR. Runs pre-commit
-  checks appropriate to the file types being committed. Blocks if quality
-  score < 80. Pass a message or Claude will generate one.
+  Score staged files, commit locally, and optionally push to remote.
+  Task branches are local-only by default — pass --push to push.
+  Pass a message or Claude will generate one.
 ---
 
 ## Commit Workflow
 
-### 1. Pre-commit quality check (auto-detect by file type)
+### 1. Score staged files
 
-For Python files staged (`*.py`, `*.ipynb`):
+Run `/score` on each staged file that hasn't been scored this session.
+Apply the gating rules:
+- BLOCK (< 70): stop, state the top issue, do not proceed
+- WARN (70–79): show the score, ask "Fix first or commit anyway?"
+- PASS (≥ 80): proceed
+
+For Python files staged (`*.py`, `*.ipynb`), also run format checks:
 ```bash
 black --check scripts/
 ruff check scripts/
@@ -18,18 +24,16 @@ mypy scripts/ --ignore-missing-imports
 ```
 
 For LaTeX files staged (`*.tex`):
-- Confirm latest compilation succeeded (check for `.pdf` output newer than `.tex`)
+- Confirm a `.pdf` exists and is newer than the `.tex` file
 
-For any file: run `python scripts/quality_score.py [file]` if it exists.
-Block if score < 80. Fix issues and re-score before proceeding.
-
-### 2. Confirm what's being committed
+### 2. Show the diff summary and confirm
 
 ```bash
 git diff --staged --stat
 ```
 
-Show the user the diff summary and confirm: "Committing [N files]. OK?"
+Show the user: "Committing [N files] to [branch]. OK?"
+Wait for confirmation before proceeding.
 
 ### 3. Write the commit message
 
@@ -42,21 +46,34 @@ Format:
 
 Types: `feat`, `fix`, `refactor`, `docs`, `analysis`, `slides`, `chore`
 
-If the user passed a message: use it verbatim.
-If not: generate one from the diff.
+Use the user's message verbatim if provided. Otherwise generate from the diff.
 
-### 4. Commit
+### 4. Commit locally
 
 ```bash
 git add -A
-git commit -m "[generated or user message]"
+git commit -m "[message]"
 ```
 
-### 5. Optional: PR and merge
+Confirm: "Committed to [branch] (local only)."
 
-If user said "PR", "merge", or "push":
+### 5. Push — only if explicitly requested
+
+**Default: never push task branches.**
+
+Push only if the user passed `--push` or explicitly said "push" / "publish":
+
 ```bash
+# Only run this when --push is explicitly passed
 git push origin $(git branch --show-current)
-gh pr create --fill
-# Only merge if user explicitly confirms
 ```
+
+For PRs, only if user said "PR" or "pull request" AND passed `--push`:
+```bash
+gh pr create --fill
+# Merge only on explicit user confirmation
+```
+
+If the user asks to push without `--push`: say
+"Task branches are local-only by default. Run `/commit --push` if you want
+to publish this branch to remote."
