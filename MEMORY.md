@@ -1,84 +1,99 @@
-# Project Memory
+# MEMORY.md — Accumulated Patterns
 
-Corrections and learned facts that persist across sessions.
-When a mistake is corrected, append a `[LEARN:category]` entry below.
+Append-only. Claude reads this at session start via `session-start.sh` hook.
+Run `/memory-prune` quarterly or when entries exceed ~50.
 
 ---
 
-<!-- Append new entries below. Most recent at bottom. -->
+## HOW TO USE THIS FILE
+
+**Three tiers — classify before appending:**
+
+| Tier | Tag | What belongs here | Where |
+|------|-----|-------------------|-------|
+| **PATTERN** | `[LEARN:workflow]` etc. | Reusable cross-project learnings, corrected mistakes | This file |
+| **DOMAIN** | `[LEARN:latex]` `[LEARN:python]` etc. | Tool/language-specific gotchas | This file |
+| **HABIT** | — | Personal/machine-specific preferences | `personal.md` (gitignored) |
+| **PRINCIPLE** | — | Stable design philosophy, non-negotiables | `CLAUDE.md` directly |
+
+When adding an entry via `/learn`, Claude will ask which tier before appending.
+
+**Format:**
+```
+## [YYYY-MM-DD] — [brief title]
+[LEARN:category] [what was wrong or assumed] → [what is actually correct]
+Context: [one sentence on when this matters]
+```
+
+---
+<!-- PRUNED 2026-03-08: Initial population from old MEMORY.md. Principles moved to CLAUDE.md. Habits moved to personal.md. -->
+---
 
 ## Workflow Patterns
 
-[LEARN:workflow] Requirements specification phase catches ambiguity before planning → reduces rework 30-50%. Use spec-then-plan for complex/ambiguous tasks (>1 hour or >3 files).
+## [2026-03-08] — Spec before plan reduces rework
+[LEARN:workflow] Jumping to planning before clarifying requirements → write a requirements spec (MUST/SHOULD/MAY with clarity status) first for any task >1 hour or touching >3 files, then plan.
+Context: Catches ambiguity early; reduces rework 30–50% on complex tasks.
 
-[LEARN:workflow] Spec-then-plan protocol: AskUserQuestion (3-5 questions) → create `quality_reports/specs/YYYY-MM-DD_description.md` with MUST/SHOULD/MAY requirements → declare clarity status (CLEAR/ASSUMED/BLOCKED) → get approval → then draft plan.
+## [2026-03-08] — Spec-then-plan protocol
+[LEARN:workflow] Asking clarifying questions verbally → use the formal spec protocol: AskUserQuestion (3–5 questions max) → create `quality_reports/specs/YYYY-MM-DD_description.md` → declare CLEAR/ASSUMED/BLOCKED per requirement → get approval → then draft plan.
+Context: The written spec survives compression and session boundaries; verbal clarification doesn't.
 
-[LEARN:workflow] Context survival before compression: (1) Update MEMORY.md with [LEARN] entries, (2) Ensure session log current (last 10 min), (3) Active plan saved to disk, (4) Open questions documented. The pre-compact hook displays checklist.
+## [2026-03-08] — Context survival checklist before compression
+[LEARN:workflow] Losing plan state on context compression → before any compact: (1) update MEMORY.md with [LEARN] entries, (2) ensure session log is current, (3) save active plan to disk, (4) document open questions. The pre-compact hook displays this checklist.
+Context: Plans/specs/logs must live on disk, not in conversation, to survive compression and session boundaries.
 
-[LEARN:workflow] Plans, specs, and session logs must live on disk (not just in conversation) to survive compression and session boundaries. Quality reports only at merge time.
+## [2026-03-08] — Template meta-work vs user work
+[LEARN:workflow] Creating session logs for template-building work → session logs in `quality_reports/` are for user work (slides, analysis, papers), not meta-work (building the repo infrastructure). Keeps the template clean for users who fork it.
+Context: Only applies to work on the claude-core repo itself, not task branches.
 
-## Documentation Standards
+---
 
-[LEARN:documentation] When adding new features, update BOTH README and guide immediately to prevent documentation drift. Stale docs break user trust.
+## Documentation
 
+## [2026-03-08] — Update README and guide together
+[LEARN:documentation] Adding a feature and updating only one of README/guide → update both immediately. Documentation drift breaks user trust.
+Context: Any new template, command, or agent needs entries in both places in the same commit.
+
+## [2026-03-08] — Template inventory must be complete
 [LEARN:documentation] Always document new templates in README's "What's Included" section with purpose description. Template inventory must be complete and accurate.
 
-[LEARN:documentation] Guide must be generic (framework-oriented) not prescriptive. Provide templates with examples for multiple workflows (LaTeX, R, Python, Jupyter), let users customize. No "thou shalt" rules.
+---
 
-[LEARN:documentation] Date fields in frontmatter and README must reflect latest significant changes. Users check dates to assess currency.
+## Design
 
-## Design Philosophy
+## [2026-03-08] — Generic means any academic workflow
+[LEARN:design] Assuming generic = Python/Jupyter, any domain. Test recommendations across these before adding them to core.
+Context: The claude-core repo is used across research/analysis/dev branches with very different stacks.
 
-[LEARN:design] Framework-oriented > Prescriptive rules. Constitutional governance works as a TEMPLATE with examples users customize to their domain. Same for requirements specs.
+## [2026-03-08] — Constitutional governance: articles not rules
+[LEARN:design] Writing rules as flat "thou shalt" statements → constitutional articles distinguish immutable principles (non-negotiable for quality/reproducibility) from flexible preferences. Keep to 3–7 articles max. Each article includes an amendment process: "overriding for this task (one-time exception)" vs "amending Article X (permanent)".
+Context: Amendment process preserves institutional memory across sessions.
 
-[LEARN:design] Quality standard for guide additions: useful + pedagogically strong + drives usage + leaves great impression + improves upon starting fresh + no redundancy + not slow. All 7 criteria must hold.
-
-[LEARN:design] Generic means working for any academic workflow: pure LaTeX (no Quarto), pure R (no LaTeX), Python/Jupyter, any domain (not just econometrics). Test recommendations across use cases.
+---
 
 ## File Organization
 
-[LEARN:files] Specifications go in `quality_reports/specs/YYYY-MM-DD_description.md`, not scattered in root or other directories. Maintains structure.
+## [2026-03-08] — Specs location
+[LEARN:files] Saving specification files in repo root or ad-hoc locations → specs go in `quality_reports/specs/YYYY-MM-DD_description.md`. Session logs in `quality_reports/session-logs/`. Maintains structure.
+Context: Pre-compact hook and /start-task look for plans in `quality_reports/plans/CURRENT_PLAN.md`.
 
-[LEARN:files] Templates belong in `templates/` directory with descriptive names. Currently have: session-log.md, quality-report.md, exploration-readme.md, archive-readme.md, requirements-spec.md, constitutional-governance.md.
-
-## Constitutional Governance
-
-[LEARN:governance] Constitutional articles distinguish immutable principles (non-negotiable for quality/reproducibility) from flexible user preferences. Keep to 3-7 articles max.
-
-[LEARN:governance] Example articles: Primary Artifact (which file is authoritative), Plan-First Threshold (when to plan), Quality Gate (minimum score), Verification Standard (what must pass), File Organization (where files live).
-
-[LEARN:governance] Amendment process: Ask user if deviating from article is "amending Article X (permanent)" or "overriding for this task (one-time exception)". Preserves institutional memory.
-
-## Skill Creation
-
-[LEARN:skills] Effective skill descriptions use trigger phrases users actually say: "check citations", "format results", "validate protocol" → Claude knows when to load skill.
-
-[LEARN:skills] Skills need 3 sections minimum: Instructions (step-by-step), Examples (concrete scenarios), Troubleshooting (common errors) → users can debug independently.
-
-[LEARN:skills] Domain-specific examples beat generic ones: citation checker (psychology), protocol validator (biology), regression formatter (economics) → shows adaptability.
+---
 
 ## Memory System
 
-[LEARN:memory] Two-tier memory solves template vs working project tension: MEMORY.md (generic patterns, committed), personal-memory.md (machine-specific, gitignored) → cross-machine sync + local privacy.
+## [2026-03-08] — Two-tier memory for template vs personal
+[LEARN:memory] Committing machine-specific preferences to MEMORY.md → use `personal.md` (gitignored) for anything true about your machine, editor, or personal style that wouldn't apply to a collaborator cloning this repo. MEMORY.md is for universal patterns.
+Context: Prevents template pollution when others fork claude-core.
 
-[LEARN:memory] Post-merge hooks prompt reflection, don't auto-append → user maintains control while building habit.
+---
 
-## Meta-Governance
+## Domain: Skills
 
-[LEARN:meta] Repository dual nature requires explicit governance: what's generic (commit) vs specific (gitignore) → prevents template pollution.
+## [2026-03-08] — Skill descriptions need trigger phrases
+[LEARN:skills] Writing vague skill descriptions → use phrases users actually say: "check citations", "format results", "validate protocol". Claude uses descriptions to know when to load a skill; vague descriptions mean it never fires.
+Context: Applies to `.claude/commands/*.md` frontmatter `description:` field.
 
-[LEARN:meta] Dogfooding principles must be enforced: plan-first, spec-then-plan, quality gates, session logs → we follow our own guide.
-
-[LEARN:meta] Template development work (building infrastructure, docs) doesn't create session logs in quality_reports/ → those are for user work (slides, analysis), not meta-work. Keeps template clean for users who fork.
-
-## User Preferences
-
-[LEARN:preferences] Primary stack: Python for data analysis (scripts/ and notebooks/), LaTeX/Beamer for slides (Slides/). 
-
-[LEARN:preferences] User: Hengxu Lin, Columbia University.
-
-[LEARN:preferences] Workflow style: structured and rigorous. Plan-first, quality gates enforced, session logs always.
-
-[LEARN:preferences] Output standard: publication-quality figures (300 DPI, PDF+PNG, explicit figsize, relative paths, transparent background for Beamer).
-
-[LEARN:preferences] Python environment: prefer pathlib. Path over string paths; always set random seeds; use black/ruff/mypy for code quality.
+## [2026-03-08] — Skills need three sections minimum
+[LEARN:skills] Writing skills with only instructions → include: Instructions (step-by-step), Examples (concrete scenarios), Troubleshooting (common errors). Users debug independently when troubleshooting is present.
+Context: Applies when creating any new command or agent file.

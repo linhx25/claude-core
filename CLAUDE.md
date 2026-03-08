@@ -1,83 +1,68 @@
-# CLAUDE.MD -- Project Development with Claude Code
+# CLAUDE.md — Agentic Workflow Core
 
-**Project:** [YOUR PROJECT NAME]
-**Researcher:** Hengxu Lin
-**Institution:** Columbia University
-**Branch:** main
-
----
-
-## Core Principles
-
-- **Plan first** -- enter plan mode before non-trivial tasks; save plans to `quality_reports/plans/`
-- **Verify after** -- compile/run and confirm output at the end of every task
-- **Single source of truth** -- Beamer `.tex` is authoritative for slides; Python scripts/notebooks are authoritative for analysis
-- **Quality gates** -- nothing ships below 80/100
-- **[LEARN] tags** -- when corrected, save `[LEARN:category] wrong → right` to MEMORY.md
+**Researcher:** Hengxu Lin  
+**Institution:** Columbia University  
+**Repo:** `claude-core` (generic foundation)  
+**Active branch / task:** `main` — no active task
 
 ---
 
-## Folder Structure
+## What This Repo Is
 
-```
-[YOUR-PROJECT]/
-├── CLAUDE.MD                    # This file
-├── .claude/                     # Rules, skills, agents, hooks
-├── Bibliography_base.bib        # Centralized bibliography
-├── preambles/header.tex         # LaTeX headers
-├── slides/                      # Beamer .tex files
-├── data/
-│   ├── raw/                     # Raw input data (read-only)
-│   └── processed/               # Cleaned/transformed data
-├── output/                      # Figures, tables, reports (derived)
-├── scripts/                     # Utility scripts
-│   └── notebooks/               # Jupyter notebooks
-├── quality_reports/             # Plans, session logs, merge reports
-├── explorations/                # Research sandbox (see rules)
-├── related_work/                # Related papers/reports for references
-└── templates/                   # Session log, quality report templates
-```
+This is the **generic core** for all Claude Code work. It is never used directly for tasks.
+Every task gets its own branch (`research/`, `analysis/`, `dev/`) that builds on this foundation.
+
+**Symlink pattern:** task repos symlink `.claude/` to this core, then add their own overrides.
+See `templates/new-task-setup.sh` for the setup script.
 
 ---
 
-## Example commands
+## Non-Negotiables (Always Enforced)
 
-```bash
-# LaTeX (3-pass, XeLaTeX only)
-cd Slides && TEXINPUTS=../preambles:$TEXINPUTS xelatex -interaction=nonstopmode file.tex
-BIBINPUTS=..:$BIBINPUTS bibtex file
-TEXINPUTS=../preambles:$TEXINPUTS xelatex -interaction=nonstopmode file.tex
-TEXINPUTS=../preambles:$TEXINPUTS xelatex -interaction=nonstopmode file.tex
-
-# Python
-python scripts/script_name.py
-python -m pytest tests/
-pip install -r requirements.txt   
-
-# Jupyter
-jupyter nbconvert --to notebook --execute notebooks/analysis.ipynb
-jupyter notebook
-
-# Code quality
-black scripts/
-ruff check scripts/
-mypy scripts/
-
-# Quality score
-python scripts/quality_score.py slides/file.tex
-python scripts/quality_score.py scripts/analysis.py
-python scripts/quality_score.py notebooks/analysis.ipynb
-```
+1. **Plan before acting** — for any task > ~30 min, write a spec in `quality_reports/plans/` and get approval before touching files
+2. **Run the artifact** — never claim completion without compiling, executing, or opening the output
+3. **Score before committing** — nothing below 80/100 gets committed; run `/score [file]` before every commit
+4. **Single source of truth** — one place defines each piece of content; no duplication
+5. **LEARN tags** — when corrected, append `[LEARN:category] wrong → right` to `MEMORY.md`
 
 ---
 
-## Quality Thresholds
+## Operator: How Claude Behaves
 
-| Score | Gate | Meaning |
-|-------|------|---------|
-| 80 | Commit | Good enough to save |
-| 90 | PR | Ready for review |
-| 95 | Excellence | Aspirational |
+Claude operates as a **contractor**, not an assistant:
+
+- For non-trivial tasks: create requirements spec → get approval → implement → verify → review → score → deliver
+- For trivial tasks (< 30 min, unambiguous): skip spec, just do it and verify
+- When uncertain: ask one clarifying question, not five
+- When blocked: state what's blocked and what decision is needed, then stop
+- Never claim "done" without running the artifact
+
+### Contractor Mode Modes
+
+| Mode | When | Claude's tools |
+|------|------|---------------|
+| **Normal** | Implementation | All tools |
+| **Delegate** (Shift+Tab) | Orchestrating agent teams | Spawn/message/task tools only — no Edit/Write/Bash |
+| **Plan** | Pre-implementation | Read + analysis only |
+
+---
+
+## Quality Gates
+
+| Score | Gate | Action |
+|-------|------|--------|
+| < 70 | BLOCK | Do not commit — fix top issue first |
+| 70–79 | WARN | Ask user before committing |
+| 80 | Commit threshold | Good to save |
+| 90 | PR threshold | Ready for review |
+| 95 | Excellence | Aspirational target |
+
+Scoring uses the `/score [file]` command — no external script required.
+Four dimensions: **Correctness** (40%) · **Completeness** (25%) · **Clarity** (20%) · **Reproducibility** (15%).
+Domain overlays (research / analysis / dev) apply additional criteria on top.
+`/commit` runs scoring automatically on staged files if not already scored.
+
+Task branches may override `/score` with domain-specific extensions — see `.claude/commands/score.md`.
 
 ---
 
@@ -85,50 +70,164 @@ python scripts/quality_score.py notebooks/analysis.ipynb
 
 | Command | What It Does |
 |---------|-------------|
-| `/compile-latex [file]` | 3-pass XeLaTeX + bibtex |
-| `/commit [msg]` | Stage, commit, PR, merge |
-| `/context-status` | Show session health + context usage |
-| `/create-slides` | Full presentation slides creation |
-| `/data-analysis [dataset]` | End-to-end Python analysis |
-| `/deep-audit` | Repository-wide consistency audit |
-| `/devils-advocate` | Challenge document/co/design |
-| `/interview-me [topic]` | Interactive research interview |
-| `/learn [skill-name]` | Extract discovery into persistent skill |
-| `/lit-review [topic]` | Literature search + synthesis |
-| `/proofread [file]` | Grammar/typo/overflow review |
-| `/visual-audit [file]` | Slide layout audit |
-| `/review-python [file]` | Python code quality review |
-| `/slide-review [file]` | Combined multi-agent review |
-| `/review-paper [file]` | Manuscript review |
+| `/start-task` | Read CLAUDE.md, check branch, draft requirements spec |
+| `/end-task` | Summarize session, update MEMORY.md, prompt "promote to main?" |
+| `/score [file]` | Score any artifact against the universal rubric before committing |
+| `/commit [msg]` | Score staged files → stage → commit → optional PR |
+| `/context-status` | Show context usage, session health, active plan |
+| `/critique [file]` | Run adversarial critic subagent on any file |
+| `/learn [topic]` | Extract non-obvious session discovery into MEMORY.md |
+| `/memory-prune` | Quarterly review — remove stale entries, promote principles |
+| `/devils-advocate` | Challenge current design decisions |
+
+*Task-specific skills live on task branches, not here.*
 
 ---
 
-## Beamer Custom Environments
+## Subagents Available (Core)
 
-| Environment       | Effect        | Use Case       |
-|-------------------|---------------|----------------|
-| `[your-env]`      | [Description] | [When to use]  |
+| Agent | File | When to Use |
+|-------|------|-------------|
+| `critic` | `.claude/agents/critic.md` | Adversarial review of any artifact |
+| `researcher` | `.claude/agents/researcher.md` | Isolated literature/doc lookup (separate context) |
 
-<!-- Example entries (delete and replace with yours):
-| `keybox` | Gold background box | Key points |
-| `highlightbox` | Gold left-accent box | Highlights |
-| `definitionbox[Title]` | Blue-bordered titled box | Formal definitions |
--->
+*Domain agents (proofreader, python-reviewer, etc.) live on task branches.*
 
 ---
 
-## Python Conventions
+## Hooks (Core — Always Active)
 
-- **Style:** PEP 8, type hints, Google-style docstrings, `black`/`ruff` formatting
-- **Reproducibility:** `numpy.random.seed()` / `random.seed()` / `torch.manual_seed()` at top; relative paths only; `requirements.txt` or `pyproject.toml`
-- **Functions:** `snake_case`, explicit return types, single responsibility
-- **Visualization:** 300 DPI for scientific figures, consistent color palette, `matplotlib` / `seaborn`
-- **Notebooks:** restart-and-run-all must succeed; no hidden state; clear output before committing
+Hooks are configured in `.claude/settings.json`, not as shell scripts.
+
+| Hook Event | What It Does |
+|------------|-------------|
+| `PreCompact` | Saves current plan snapshot before context compression |
+| `PostToolUse` (Write/Edit) | Appends edit to session log |
+| `SessionStart` | Loads MEMORY.md + personal.md into session context |
+| `Stop` | Prompts to update MEMORY.md if session had learnings |
 
 ---
 
-## Active Projects
+## MCP Servers
 
-| Project | Slides | Analysis | Key Content |
-|---------|--------|----------|-------------|
-| [Topic] | slides/topic.tex` | `notebooks/topic.ipynb` | [Brief description] |
+Three servers configured for this workflow. See `docs/mcp-setup-macos.md` for first-time setup.
+
+| Server | Scope | Transport | What it enables |
+|--------|-------|-----------|----------------|
+| `github` | user (`~/.claude.json`) | HTTP | Repos, issues, PRs, code search |
+| `brave-search` | user (`~/.claude.json`) | stdio | Web search during tasks |
+| `filesystem` | project (`.mcp.json`) | stdio | File access scoped to task directory |
+
+**One-time setup (macOS):**
+```bash
+# GitHub — needs a PAT in $GITHUB_PAT (add to ~/.zshrc)
+claude mcp add-json github \
+  '{"type":"http","url":"https://api.githubcopilot.com/mcp","headers":{"Authorization":"Bearer '"$GITHUB_PAT"'"}}' \
+  --scope user
+
+# Brave search — needs a key at https://api.search.brave.com (add BRAVE_API_KEY to ~/.zshrc)
+claude mcp add brave-search --transport stdio \
+  --env BRAVE_API_KEY=$BRAVE_API_KEY \
+  -- npx -y @modelcontextprotocol/server-brave-search \
+  --scope user
+```
+
+`filesystem` is configured per-task in `.mcp.json` — automatically scoped to the project root.
+
+**Check status inside Claude Code:** `/mcp`
+
+Keep total active MCP tools < 80. With Tool Search (auto-enabled on Sonnet/Opus 4), tool definitions load on demand — ~85% context reduction.
+
+---
+
+## Agent Teams (Experimental)
+
+Agent teams are disabled by default. Enable in `.claude/settings.json` when needed:
+```json
+{ "env": { "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1" } }
+```
+
+Use agent teams **only** when tasks are genuinely parallel with non-overlapping files.
+For sequential tasks or same-file edits: single session or subagents.
+
+---
+
+## Branch Naming Convention
+
+```
+main                    ← this core (never used directly for tasks)
+research/[paper-name]   ← writing, LaTeX, literature review
+analysis/[project-name] ← Python, data, notebooks
+dev/[project-name]      ← software, APIs, deployment
+exploration/[idea]      ← throwaway experiments (60/100 threshold)
+```
+
+---
+
+## Folder Structure (Task Repos)
+
+When you start a task branch, the project looks like:
+
+```
+[project-root]/
+├── CLAUDE.md                    ← updated for this task (researcher, branch, active task)
+├── MEMORY.md                    ← accumulated learnings (append-only)
+├── .claude/                     ← symlinked to claude-core, + task overrides
+│   ├── agents/                  ← core agents + task-specific agents
+│   ├── commands/                ← core skills + task-specific skills
+│   ├── hooks/                   ← hook scripts referenced by settings.json
+│   ├── settings.json            ← hooks config, permissions, env vars
+│   └── snapshots/               ← auto-saved plan snapshots (gitignored)
+├── .mcp.json                    ← MCP servers for this task
+├── quality_reports/
+│   ├── plans/                   ← active plan (CURRENT_PLAN.md lives here)
+│   ├── specs/                   ← requirements specs (YYYY-MM-DD_description.md)
+│   └── session-logs/            ← session summaries (gitignored — personal work diary)
+├── templates/                   ← symlinked to claude-core/templates
+└── [task-specific folders]
+```
+
+**Not in the repo (machine-local only):**
+- `~/.claude/personal.md` — your preferences, background, machine config (injected at session start)
+
+---
+
+## Python Conventions (When Applicable)
+
+- **Style:** PEP 8, type hints, Google-style docstrings, `black`/`ruff`
+- **Reproducibility:** seed at top (`numpy.random.seed()`, `torch.manual_seed()`); relative paths only; `requirements.txt` or `pyproject.toml`
+- **Visualization:** 300 DPI, consistent palette, `matplotlib`/`seaborn`
+- **Notebooks:** restart-and-run-all must succeed; clear output before committing
+
+---
+
+## LaTeX / Beamer Conventions (When Applicable)
+
+- XeLaTeX only (3-pass: xelatex → bibtex → xelatex → xelatex)
+- Single `Bibliography_base.bib` — never duplicate entries
+- Figures generated by scripts, not stored as raw images
+- `TEXINPUTS=../preambles:$TEXINPUTS` for header resolution
+
+---
+
+## Active Task
+
+*(Update when starting a task branch)*
+
+| Field | Value |
+|-------|-------|
+| Task name | — |
+| Branch | `main` |
+| Started | — |
+| Current status | No active task |
+| Next action | — |
+
+---
+
+## Reminders to Claude
+
+- Read MEMORY.md at session start — it contains hard-won learnings
+- If context is > 70% full, run `/context-status` and consider compacting
+- When spawning subagents: use `researcher` for lookup tasks, `critic` for review
+- Never edit files in `data/raw/` — it's read-only by convention
+- Snapshots in `.claude/snapshots/` are auto-generated — never manually edit them

@@ -1,40 +1,46 @@
-# Session Log: [Date] -- [Brief Title]
+# Session Log — YYYY-MM-DD
 
-**Status:** IN PROGRESS | COMPLETED
+**Branch:** [branch name]  
+**Task:** [task name]  
+**Duration:** ~[N] hours  
+**Context at end:** [low / medium / high]
 
-## Objective
-[What we set out to accomplish this session]
+---
 
-## Changes Made
+## Completed ✓
 
-| File | Change | Reason | Quality Score |
-|------|--------|--------|---|
-| `path/to/file` | [What changed] | [Why] | [N]/100 |
+- 
+- 
 
-## Design Decisions
+## In Progress →
 
-| Decision | Alternatives Considered | Rationale |
-|----------|------------------------|-----------|
-| [Choice made] | [Other options] | [Why this one] |
+- 
 
-## Incremental Work Log
+## Deferred / Blocked ✗
 
-**HH:MM UTC:** [event description]
+- 
 
-## Learnings & Corrections
+---
 
-- [LEARN:category] What you learned for future reference
+## Files Modified
 
-## Verification Results
+| File | Change Type | Score |
+|------|-------------|-------|
+| | feat / fix / refactor / analysis / slides | /100 |
 
-| Check | Result | Status |
-|-------|--------|--------|
-| [What was checked] | [Result] | PASS / FAIL |
+---
 
-## Open Questions / Blockers
+## Learnings This Session
 
-- [ ] [Question or blocker]
+*(Entries already appended to MEMORY.md)*
 
-## Next Steps
+- `[LEARN:category]` — [summary]
 
-- [ ] [What remains]
+---
+
+## Next Session: Start Here
+
+1. [First action]
+2. [Second action]
+
+**Branch status:** [clean / uncommitted changes / needs review]

@@ -1,56 +1,69 @@
-# Requirements Specification: [Title]
+# Requirements Spec — [TASK NAME]
 
-**Date:** [YYYY-MM-DD]
-**Status:** DRAFT | APPROVED
+**Date:** YYYY-MM-DD  
+**Branch:** [branch name]  
+**Status:** DRAFT → APPROVED → IN PROGRESS → DONE
 
 ---
 
-## Objective
+## Task Summary
 
-[One sentence: what success looks like]
+[2–3 sentence description of what needs to be done and why]
 
 ---
 
 ## Requirements
 
-### MUST Have (Non-Negotiable)
+### MUST (non-negotiable)
+| # | Requirement | Clarity |
+|---|-------------|---------|
+| M1 | | CLEAR / ASSUMED / BLOCKED |
+| M2 | | |
 
-- [ ] [Required feature or constraint]
-- [ ] [Required feature or constraint]
+### SHOULD (strong preference)
+| # | Requirement | Clarity |
+|---|-------------|---------|
+| S1 | | CLEAR / ASSUMED / BLOCKED |
 
-### SHOULD Have (Preferred)
-
-- [ ] [Preferred feature or enhancement]
-- [ ] [Preferred feature or enhancement]
-
-### MAY Have (Optional, If Time)
-
-- [ ] [Nice-to-have enhancement]
-- [ ] [Nice-to-have enhancement]
-
----
-
-## Clarity Status
-
-| Aspect | Status | Notes |
-|--------|--------|-------|
-| [Ambiguous aspect] | CLEAR / ASSUMED / BLOCKED | [How it was resolved or why it's assumed] |
-| [Another aspect] | CLEAR / ASSUMED / BLOCKED | [Explanation] |
-
-**Status Definitions:**
-- **CLEAR:** Fully specified, no ambiguity
-- **ASSUMED:** Reasonable assumption made in absence of clarity; user can override
-- **BLOCKED:** Cannot proceed until this is answered
+### MAY (nice to have)
+| # | Requirement | Clarity |
+|---|-------------|---------|
+| P1 | | CLEAR / ASSUMED / BLOCKED |
 
 ---
 
-## Success Criteria
+## Clarity Status Definitions
 
-- [Measurable criterion for completion]
-- [Measurable criterion for completion]
+- **CLEAR** — well understood, no ambiguity
+- **ASSUMED** — we're proceeding on an assumption; flag if assumption proves wrong
+- **BLOCKED** — need user input before proceeding
+
+---
+
+## Blockers / Open Questions
+
+| Question | Priority | Who decides |
+|----------|----------|-------------|
+| | | |
+
+---
+
+## Approach
+
+[Brief description of how we'll implement this — tools, steps, order of operations]
+
+---
+
+## Quality Gate
+
+Target score: ___/100  
+Commit threshold: 80  
+Files to score: [list]
 
 ---
 
 ## Approval
 
-[ ] User approved: [Date]
+- [ ] User approved this spec
+- Approved by: [user]
+- Approved on: YYYY-MM-DD
