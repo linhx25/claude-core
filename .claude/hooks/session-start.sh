@@ -7,8 +7,8 @@ set -euo pipefail
 
 MEMORY_FILE="${CLAUDE_PROJECT_DIR:-$(pwd)}/MEMORY.md"
 
-# User-level personal.md (preferred — true across all projects)
-PERSONAL_FILE="${CLAUDE_PROJECT_DIR:-$(pwd)}/personal.md"
+# User-level personal.md — global, shared across all projects
+PERSONAL_FILE="$HOME/.claude/personal.md"
 
 if [ -f "$MEMORY_FILE" ] && [ -s "$MEMORY_FILE" ]; then
   # Only inject if there are actual LEARN entries
@@ -17,6 +17,12 @@ if [ -f "$MEMORY_FILE" ] && [ -s "$MEMORY_FILE" ]; then
     cat "$MEMORY_FILE"
     echo "=== END MEMORY.md ==="
   fi
+fi
+
+if [ -f "$PERSONAL_FILE" ] && [ -s "$PERSONAL_FILE" ]; then
+  echo "=== SESSION CONTEXT: personal.md (user preferences) ==="
+  cat "$PERSONAL_FILE"
+  echo "=== END personal.md ==="
 fi
 
 # Report latest plan snapshot if available
