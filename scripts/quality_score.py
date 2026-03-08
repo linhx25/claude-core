@@ -295,7 +295,7 @@ class QualityScorer:
             self.score -= points
 
     def score_beamer(self) -> Dict:
-        """Score Beamer/LaTeX lecture slides."""
+        """Score Beamer/LaTeX slides."""
         content = self.filepath.read_text(encoding="utf-8")
 
         syntax_issues = IssueDetector.check_latex_syntax(content)

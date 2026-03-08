@@ -1,6 +1,6 @@
 ---
 name: create-slides
-description: Create new Beamer lecture from papers and materials. Guided workflow with notation consistency.
+description: Create new Beamer presentation from related materials. Guided workflow with notation consistency.
 argument-hint: "[Topic name]"
 allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Task"]
 context: fork
@@ -8,7 +8,7 @@ context: fork
 
 # Lecture Creation Workflow
 
-Create a beautiful, pedagogically excellent Beamer lecture deck.
+Create a beautiful, pedagogically excellent Beamer presentation deck.
 
 **This is a collaborative, iterative process. The instructor drives the vision; Claude is a thinking partner.**
 

@@ -6,7 +6,7 @@ paths:
 
 # Proofreading Agent Protocol (MANDATORY)
 
-**Every lecture file MUST be reviewed before any commit or PR.**
+**Every slide file MUST be reviewed before any commit or PR.**
 
 **CRITICAL RULE: The agent must NEVER apply changes directly. It proposes all changes for review first.**
 

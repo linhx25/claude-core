@@ -1,27 +1,26 @@
 ---
 name: proofread
-description: Run the proofreading protocol on lecture files. Checks grammar, typos, overflow, consistency, and academic writing quality. Produces a report without editing files.
+description: Run the proofreading protocol on presentation files. Checks grammar, typos, overflow, consistency, and writing quality. Produces a report without editing files.
 argument-hint: "[filename or 'all']"
 allowed-tools: ["Read", "Grep", "Glob", "Write", "Task"]
 ---
 
 # Proofread Lecture Files
 
-Run the mandatory proofreading protocol on lecture files. This produces a report of all issues found WITHOUT editing any source files.
+Run the mandatory proofreading protocol on presentation files. This produces a report of all issues found WITHOUT editing any source files.
 
 ## Steps
 
 1. **Identify files to review:**
    - If `$ARGUMENTS` is a specific filename: review that file only
-   - If `$ARGUMENTS` is "all": review all lecture files in `slides/`
+   - If `$ARGUMENTS` is "all": review all files in `slides/`
 
 2. **For each file, launch the proofreader agent** that checks for:
 
    **GRAMMAR:** Subject-verb agreement, articles (a/an/the), prepositions, tense consistency
    **TYPOS:** Misspellings, search-and-replace artifacts, duplicated words
-   **OVERFLOW:** Overfull hbox (LaTeX), content exceeding slide boundaries (Quarto)
+   **OVERFLOW:** Overfull hbox (LaTeX)
    **CONSISTENCY:** Citation format, notation, terminology
-   **ACADEMIC QUALITY:** Informal language, missing words, awkward constructions
 
 3. **Produce a detailed report** for each file listing every finding with:
    - Location (line number or slide title)

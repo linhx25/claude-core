@@ -1,6 +1,6 @@
 ---
 name: compile-latex
-description: Compile a Beamer LaTeX slide deck with XeLaTeX (3 passes + bibtex). Use when compiling lecture slides.
+description: Compile a Beamer LaTeX slide deck with XeLaTeX (3 passes + bibtex). Use when compiling presentation slides.
 argument-hint: "[filename without .tex extension]"
 allowed-tools: ["Read", "Bash", "Glob"]
 ---

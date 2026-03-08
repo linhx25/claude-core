@@ -8,7 +8,7 @@ context: fork
 
 # Slide Excellence Review
 
-Run a comprehensive multi-dimensional review of Beamer lecture slides. Multiple agents analyze the file independently, then results are synthesized.
+Run a comprehensive multi-dimensional review of Beamer presentation slides. Multiple agents analyze the file independently, then results are synthesized.
 
 ## Steps
 

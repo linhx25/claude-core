@@ -3,7 +3,7 @@
 
 **Last Updated:** 2026-03-08
 
-A ready-to-fork foundation for AI-assisted academic work using **Python + LaTeX/Beamer**. You describe what you want — presentation slides, research ideation/review/development, data analysis, data search — and Claude plans the approach, runs specialized agents, fixes issues, verifies quality, and presents results. 
+An AI-assisted agent template using **Python + LaTeX/Beamer**. You describe what you want — research ideation/review/development, data analysis, data search — and Claude plans the approach, runs specialized agents, fixes issues, verifies quality, and presents results. 
 
 ---
 
@@ -72,12 +72,11 @@ Plans, specifications, and session logs survive auto-compression and session bou
 
 ## Use Cases
 
-| Academic Task | How This Workflow Helps |
+| Task | How This Workflow Helps |
 |---------------|----------------------|
-| Lecture slides (Beamer) | Full creation, multi-agent review, compilation |
+| Presentation slides (Beamer) | Full creation, multi-agent review, compilation |
 | Research papers | Literature review, manuscript review, simulated peer review |
 | Data analysis | End-to-end Python pipelines, publication-ready output |
-| Replication packages | Reproducibility audit trails, tolerance verification |
 | Research proposals | Structured drafting with adversarial critique |
 
 ---
@@ -94,7 +93,6 @@ Plans, specifications, and session logs survive auto-compression and session bou
 | `proofreader` | Grammar, typos, overflow, consistency review |
 | `slide-auditor` | Visual layout audit for Beamer (overflow, font consistency, spacing) |
 | `python-reviewer` | Python code quality, reproducibility, and logic correctness |
-| `domain-reviewer` | **Template** for your field-specific substance reviewer |
 
 ### Skills (`.claude/skills/`)
 
@@ -106,10 +104,9 @@ Plans, specifications, and session logs survive auto-compression and session bou
 | `/review-python` | Launch Python code reviewer |
 | `/slide-review` | Combined multi-agent slide review |
 | `/devils-advocate` | Challenge design decisions before committing |
-| `/create-slides` | Full lecture creation workflow |
+| `/create-slides` | Full presentation slides creation workflow |
 | `/data-analysis` | End-to-end Python analysis with publication-ready output |
 | `/commit` | Stage, commit, create PR, and merge to main |
-| `/lit-review` | Literature search, synthesis, and gap identification |
 | `/interview-me` | Interactive interview to formalize a research idea |
 | `/review-paper` | Manuscript review: structure, arguments, referee objections |
 | `/learn` | Extract non-obvious discoveries into persistent skills |
@@ -178,11 +175,10 @@ Not all tools are needed — install only what your project uses. Claude Code is
 ## Adapting for Your Field
 
 1. **Fill in the knowledge base** (`.claude/rules/knowledge-base-template.md`) with your notation, applications, and design principles
-2. **Customize the domain reviewer** (`.claude/agents/domain-reviewer.md`) with review lenses specific to your field
-3. **Update Beamer environments** in `CLAUDE.md` with your custom theorem/definition boxes
-4. **Add field-specific Python pitfalls** to `.claude/rules/python-code-conventions.md`
-5. **Customize the workflow quick reference** (`.claude/WORKFLOW_QUICK_REF.md`) with your non-negotiables and preferences
-6. **Set up the exploration folder** (`explorations/`) for experimental work
+2. **Update Beamer environments** in `CLAUDE.md` with your custom theorem/definition boxes
+3. **Add field-specific Python pitfalls** to `.claude/rules/python-code-conventions.md`
+4. **Customize the workflow quick reference** (`.claude/WORKFLOW_QUICK_REF.md`) with your non-negotiables and preferences
+5. **Set up the exploration folder** (`explorations/`) for experimental work
 
 ---
 

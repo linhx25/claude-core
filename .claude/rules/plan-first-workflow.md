@@ -17,7 +17,7 @@
 ## Step 3: Requirements Specification (For Complex/Ambiguous Tasks)
 
 **When to use:**
-- Task is high-level or vague ("improve the lecture", "analyze the data")
+- Task is high-level or vague ("improve the slides", "analyze the data")
 - Multiple valid interpretations exist
 - Significant effort required (>1 hour or >3 files)
 

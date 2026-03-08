@@ -6,7 +6,7 @@ paths:
 # Course Knowledge Base: [YOUR COURSE NAME]
 
 <!-- Fill in the tables below with YOUR domain-specific content.
-     Claude reads this before creating/modifying any lecture content. -->
+     Claude reads this before creating/modifying any presentation content. -->
 
 ## Notation Registry
 
