@@ -68,12 +68,6 @@ Copies drift. When you improve a core hook or skill, copies don't benefit. Symli
 **Why is `settings.json` copied, not symlinked?**  
 Tasks may need different permissions or to enable agent teams. Copying lets each task customize without affecting core.
 
-**Why is GitHub user-scoped and filesystem project-scoped?**  
-GitHub auth (your PAT) is personal and constant across projects — it belongs in `~/.claude.json`. Filesystem paths are project-specific — a research project needs access to `~/papers`, a dev project needs `~/code`. Committing `.mcp.json` with the correct paths means teammates get the right scope automatically when they clone. Credentials never go in `.mcp.json`.
-
-**Why a rubric command instead of a quality_score.py script?**  
-A script would need to know what files matter and what "quality" means per domain — that varies completely between a LaTeX paper and a Python pipeline. The `/score` command uses a universal four-dimension rubric (Correctness 40%, Completeness 25%, Clarity 20%, Reproducibility 15%) that Claude applies as judgment, with domain overlays for research/analysis/dev. Task branches can override `/score` with their own extensions. No external dependency, no maintenance burden.
-
 **Why are agent teams disabled by default?**  
 They cost ~3–7× tokens. Enable only when tasks are genuinely parallel with non-overlapping file boundaries. Set `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS: "1"` in the task's `settings.json`.
 
