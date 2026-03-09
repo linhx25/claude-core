@@ -17,7 +17,7 @@ set -euo pipefail
 BRANCH_TYPE="${1:-}"
 TASK_NAME="${2:-}"
 PROJECT_ROOT="${3:-$(pwd)}"
-CORE_REPO="${CLAUDE_PROJECT_DIR:-$(pwd)}/claude-core"
+CORE_REPO="$HOME/.claude-core"
 
 # ── Validation ────────────────────────────────────────────────────────────────
 
@@ -29,7 +29,7 @@ fi
 
 if [ ! -d "$CORE_REPO" ]; then
   echo "Error: claude-core not found at $CORE_REPO"
-  echo "Clone it first: git clone <your-core-repo-url> ~/claude-core"
+  echo "Clone it first: git clone <your-core-repo-url> ~/.claude-core"
   exit 1
 fi
 
@@ -61,7 +61,7 @@ echo "On branch: $BRANCH_NAME (local only — will not push unless you run /comm
 # Strategy: symlink the core's .claude/ subdirectories, keep project-level
 # settings.json and agents/ separate so task-specific additions don't pollute core.
 
-mkdir -p .claude/{agents,commands,hooks,snapshots}
+mkdir -p .claude/{agents,commands,snapshots}
 
 # Symlink core commands and hooks (read-only from core)
 if [ ! -L ".claude/core-commands" ]; then
@@ -82,7 +82,10 @@ fi
 # Copy (not symlink) settings.json so task can customize
 if [ ! -f ".claude/settings.json" ]; then
   cp "$CORE_REPO/.claude/settings.json" .claude/settings.json
-  echo "Copied: .claude/settings.json (task-editable)"
+  # Rewrite hook paths to use the core-hooks symlink
+  sed -i.bak 's|\.claude/hooks/|.claude/core-hooks/|g' .claude/settings.json
+  rm -f .claude/settings.json.bak
+  echo "Copied: .claude/settings.json (hooks → core-hooks)"
 fi
 
 # ── Copy CLAUDE.md template ───────────────────────────────────────────────────
@@ -126,6 +129,10 @@ case "$BRANCH_TYPE" in
   dev)
     mkdir -p src tests docs scripts
     echo "Created: dev structure (src/, tests/, docs/)"
+    ;;
+  exploration)
+    mkdir -p explorations output
+    echo "Created: exploration structure (explorations/, output/)"
     ;;
 esac
 
@@ -183,11 +190,17 @@ fi
 echo ""
 echo "✓ Task branch ready: $BRANCH_NAME"
 echo ""
+echo "This branch is LOCAL ONLY. It will never push to remote unless you"
+echo "explicitly run: /commit --push"
+echo ""
 echo "Next steps:"
 echo "  1. cd $PROJECT_ROOT"
-echo "  2. Update CLAUDE.md — fill in task description and Active Task table"
+echo "  2. Open CLAUDE.md — fill in task name, description, and Active Task table"
 echo "  3. Run: claude"
 echo "  4. Type: /start-task"
+echo ""
+echo "Scoring: run /score [file] before /commit"
+echo "  Extend .claude/commands/score.md for domain-specific criteria"
 echo ""
 echo "MCP servers:"
 echo "  Filesystem: active in .mcp.json (scoped to $EXPANDED_ROOT)"
