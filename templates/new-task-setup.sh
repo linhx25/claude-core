@@ -17,7 +17,7 @@ set -euo pipefail
 BRANCH_TYPE="${1:-}"
 TASK_NAME="${2:-}"
 PROJECT_ROOT="${3:-$(pwd)}"
-CORE_REPO="$HOME/.claude-core"
+CORE_REPO="${CLAUDE_PROJECT_DIR:-$(pwd)}/claude-core"
 
 # ── Validation ────────────────────────────────────────────────────────────────
 

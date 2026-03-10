@@ -1,7 +1,5 @@
 # CLAUDE.md — Agentic Workflow Core
 
-**Researcher:** Hengxu Lin  
-**Institution:** Columbia University  
 **Repo:** `claude-core` (generic foundation)  
 **Active branch / task:** `main` — no active task
 
