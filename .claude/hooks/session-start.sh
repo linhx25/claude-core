@@ -1,34 +1,35 @@
 #!/usr/bin/env bash
 # session-start.sh
 # Fires when a new session starts or is resumed.
-# Outputs MEMORY.md content to stdout → Claude sees it as context.
+# Outputs MEMORY.md and personal.md to stdout → Claude sees them as context.
 
 set -euo pipefail
 
-MEMORY_FILE="${CLAUDE_PROJECT_DIR:-$(pwd)}/MEMORY.md"
+PROJ="${CLAUDE_PROJECT_DIR:-$(pwd)}"
 
-# User-level personal.md — global, shared across all projects
-PERSONAL_FILE="$HOME/.claude/personal.md"
-
-if [ -f "$MEMORY_FILE" ] && [ -s "$MEMORY_FILE" ]; then
-  # Only inject if there are actual LEARN entries
-  if grep -q "\[LEARN:" "$MEMORY_FILE" 2>/dev/null; then
-    echo "=== SESSION CONTEXT: MEMORY.md (past learnings) ==="
-    cat "$MEMORY_FILE"
-    echo "=== END MEMORY.md ==="
-  fi
+# Inject MEMORY.md if it has any LEARN entries
+MEMORY_FILE="$PROJ/MEMORY.md"
+if [ -f "$MEMORY_FILE" ] && grep -q "\[LEARN:" "$MEMORY_FILE" 2>/dev/null; then
+  echo "=== SESSION CONTEXT: MEMORY.md (past learnings) ==="
+  cat "$MEMORY_FILE"
+  echo "=== END MEMORY.md ==="
 fi
 
+# Inject personal.md if present (gitignored, machine-specific)
+PERSONAL_FILE="$HOME/.claude/personal.md"
 if [ -f "$PERSONAL_FILE" ] && [ -s "$PERSONAL_FILE" ]; then
-  echo "=== SESSION CONTEXT: personal.md (user preferences) ==="
+  echo "=== SESSION CONTEXT: personal.md (your local preferences) ==="
   cat "$PERSONAL_FILE"
   echo "=== END personal.md ==="
 fi
 
-# Report latest plan snapshot if available
-LATEST_SNAPSHOT=$(ls -t "${CLAUDE_PROJECT_DIR:-$(pwd)}/.claude/snapshots"/plan_*.md 2>/dev/null | head -1)
+# Report latest plan snapshot if available (macOS-compatible)
+SNAPSHOTS_DIR="$PROJ/.claude/snapshots"
+LATEST_SNAPSHOT=$(ls -t "$SNAPSHOTS_DIR"/plan_*.md 2>/dev/null | head -1 || true)
 if [ -n "$LATEST_SNAPSHOT" ]; then
-  SNAPSHOT_AGE=$(( ($(date +%s) - $(stat -c %Y "$LATEST_SNAPSHOT" 2>/dev/null || stat -f %m "$LATEST_SNAPSHOT" 2>/dev/null || echo 0)) / 60 ))
+  FILE_TIME=$(date -r "$LATEST_SNAPSHOT" +%s 2>/dev/null || date +%s)
+  NOW=$(date +%s)
+  SNAPSHOT_AGE=$(( (NOW - FILE_TIME) / 60 ))
   echo "Note: Plan snapshot available from ${SNAPSHOT_AGE}m ago → $LATEST_SNAPSHOT"
 fi
 

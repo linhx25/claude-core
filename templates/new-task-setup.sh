@@ -45,7 +45,6 @@ echo ""
 mkdir -p "$PROJECT_ROOT"
 cd "$PROJECT_ROOT"
 
-# Init git if needed
 if [ ! -d .git ]; then
   git init
   echo "Initialized git repo"
@@ -55,90 +54,98 @@ fi
 
 git checkout -b "$BRANCH_NAME" 2>/dev/null || git checkout "$BRANCH_NAME"
 echo "On branch: $BRANCH_NAME (local only — will not push unless you run /commit --push)"
+echo ""
 
-# ── Symlink .claude/ to core ──────────────────────────────────────────────────
+# ── Wire .claude/ ─────────────────────────────────────────────────────────────
 
-# Strategy: symlink the core's .claude/ subdirectories, keep project-level
-# settings.json and agents/ separate so task-specific additions don't pollute core.
+mkdir -p .claude/snapshots
 
-mkdir -p .claude/{agents,commands,snapshots}
+# commands/ — symlink each core file so Claude Code discovers them.
+# Task-specific files in the same folder shadow core ones by same filename.
+mkdir -p .claude/commands
+echo "Linking core commands..."
+for cmd in "$CORE_REPO/.claude/commands/"*.md; do
+  fname=$(basename "$cmd")
+  if [ ! -e ".claude/commands/$fname" ]; then
+    ln -s "$cmd" ".claude/commands/$fname"
+    echo "  + $fname"
+  else
+    echo "  ~ $fname (task override kept)"
+  fi
+done
 
-# Symlink core commands and hooks (read-only from core)
-if [ ! -L ".claude/core-commands" ]; then
-  ln -s "$CORE_REPO/.claude/commands" .claude/core-commands
-  echo "Linked: .claude/core-commands → $CORE_REPO/.claude/commands"
+# agents/ — same pattern
+mkdir -p .claude/agents
+echo "Linking core agents..."
+for agent in "$CORE_REPO/.claude/agents/"*.md; do
+  fname=$(basename "$agent")
+  if [ ! -e ".claude/agents/$fname" ]; then
+    ln -s "$agent" ".claude/agents/$fname"
+    echo "  + $fname"
+  else
+    echo "  ~ $fname (task override kept)"
+  fi
+done
+
+# hooks/ — symlink the whole directory.
+# settings.json already uses .claude/hooks/ paths matching the core repo — no rewriting needed.
+if [ ! -e ".claude/hooks" ]; then
+  ln -s "$CORE_REPO/.claude/hooks" .claude/hooks
+  echo "Linked: .claude/hooks → $CORE_REPO/.claude/hooks"
 fi
 
-if [ ! -L ".claude/core-hooks" ]; then
-  ln -s "$CORE_REPO/.claude/hooks" .claude/core-hooks
-  echo "Linked: .claude/core-hooks → $CORE_REPO/.claude/hooks"
-fi
-
-if [ ! -L ".claude/core-agents" ]; then
-  ln -s "$CORE_REPO/.claude/agents" .claude/core-agents
-  echo "Linked: .claude/core-agents → $CORE_REPO/.claude/agents"
-fi
-
-# Copy (not symlink) settings.json so task can customize
+# settings.json — copy (not symlink) so task can customize permissions/env
 if [ ! -f ".claude/settings.json" ]; then
   cp "$CORE_REPO/.claude/settings.json" .claude/settings.json
-  # Rewrite hook paths to use the core-hooks symlink
-  sed -i.bak 's|\.claude/hooks/|.claude/core-hooks/|g' .claude/settings.json
-  rm -f .claude/settings.json.bak
-  echo "Copied: .claude/settings.json (hooks → core-hooks)"
+  echo "Copied: .claude/settings.json"
 fi
 
-# ── Copy CLAUDE.md template ───────────────────────────────────────────────────
+echo ""
+
+# ── Copy CLAUDE.md and MEMORY.md ──────────────────────────────────────────────
 
 if [ ! -f CLAUDE.md ]; then
   cp "$CORE_REPO/CLAUDE.md" CLAUDE.md
-  # Update the branch and task fields
   sed -i.bak "s|Active branch / task:.*|Active branch / task: \`${BRANCH_NAME}\` — [fill in task description]|" CLAUDE.md
   rm -f CLAUDE.md.bak
-  echo "Copied: CLAUDE.md (update Active Task table)"
+  echo "Copied: CLAUDE.md (fill in Active Task table before running /start-task)"
 fi
-
-# ── Copy MEMORY.md ────────────────────────────────────────────────────────────
 
 if [ ! -f MEMORY.md ]; then
   cp "$CORE_REPO/MEMORY.md" MEMORY.md
   echo "Copied: MEMORY.md"
 fi
 
-# ── Create project structure ──────────────────────────────────────────────────
+# ── Project structure ─────────────────────────────────────────────────────────
 
 mkdir -p quality_reports/{plans,session-logs}
 
-# Symlink templates from core
-if [ ! -L templates ]; then
+if [ ! -e templates ]; then
   ln -s "$CORE_REPO/templates" templates
   echo "Linked: templates → $CORE_REPO/templates"
 fi
 
-# ── Domain-specific structure ─────────────────────────────────────────────────
-
+# Domain-specific folders
 case "$BRANCH_TYPE" in
   research)
     mkdir -p slides related_work output/figures preambles
-    echo "Created: research structure (slides/, related_work/, output/figures/)"
+    echo "Created: research structure"
     ;;
   analysis)
     mkdir -p data/{raw,processed} output/{figures,tables,reports} scripts/notebooks
-    echo "Created: analysis structure (data/, output/, scripts/notebooks/)"
+    echo "Created: analysis structure"
     ;;
   dev)
     mkdir -p src tests docs scripts
-    echo "Created: dev structure (src/, tests/, docs/)"
+    echo "Created: dev structure"
     ;;
   exploration)
     mkdir -p explorations output
-    echo "Created: exploration structure (explorations/, output/)"
+    echo "Created: exploration structure"
     ;;
 esac
 
-# ── .mcp.json (project-scoped MCP: filesystem only) ──────────────────────────
-# GitHub and web search are user-scoped in ~/.claude.json — set up once per machine.
-# See docs/mcp-setup-macos.md for instructions.
+# ── .mcp.json ─────────────────────────────────────────────────────────────────
 
 if [ ! -f .mcp.json ]; then
   EXPANDED_ROOT=$(cd "$PROJECT_ROOT" && pwd)
@@ -148,16 +155,12 @@ if [ ! -f .mcp.json ]; then
   "mcpServers": {
     "filesystem": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "${EXPANDED_ROOT}"
-      ]
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${EXPANDED_ROOT}"]
     }
   }
 }
 EOF
-  echo "Created: .mcp.json (filesystem server scoped to $EXPANDED_ROOT)"
+  echo "Created: .mcp.json (filesystem scoped to $EXPANDED_ROOT)"
 fi
 
 # ── .gitignore ────────────────────────────────────────────────────────────────
@@ -170,7 +173,7 @@ if [ ! -f .gitignore ]; then
 # Python
 __pycache__/ *.pyc .ipynb_checkpoints/ .mypy_cache/ .ruff_cache/
 
-# Data (raw data is often too large for git)
+# Data
 data/raw/
 
 # Secrets
@@ -179,8 +182,11 @@ data/raw/
 # macOS
 .DS_Store
 
-# Snapshots (auto-generated)
+# Claude snapshots
 .claude/snapshots/
+
+# Session logs
+quality_reports/session-logs/
 EOF
   echo "Created: .gitignore"
 fi
@@ -190,21 +196,13 @@ fi
 echo ""
 echo "✓ Task branch ready: $BRANCH_NAME"
 echo ""
-echo "This branch is LOCAL ONLY. It will never push to remote unless you"
-echo "explicitly run: /commit --push"
+echo "This branch is LOCAL ONLY. Never pushes unless you run: /commit --push"
 echo ""
 echo "Next steps:"
 echo "  1. cd $PROJECT_ROOT"
-echo "  2. Open CLAUDE.md — fill in task name, description, and Active Task table"
-echo "  3. Run: claude"
-echo "  4. Type: /start-task"
+echo "  2. Edit CLAUDE.md — fill in task name and Active Task table"
+echo "  3. claude"
+echo "  4. /start-task"
 echo ""
-echo "Scoring: run /score [file] before /commit"
-echo "  Extend .claude/commands/score.md for domain-specific criteria"
-echo ""
-echo "MCP servers:"
-echo "  Filesystem: active in .mcp.json (scoped to $EXPANDED_ROOT)"
-echo "  GitHub + web search: set up once with docs/mcp-setup-macos.md (user-scoped)"
-echo ""
-echo "To add task-specific agents:  .claude/agents/your-agent.md"
-echo "To add task-specific skills:  .claude/commands/your-skill.md"
+echo "To add task-specific commands:  .claude/commands/your-command.md"
+echo "To add task-specific agents:    .claude/agents/your-agent.md"

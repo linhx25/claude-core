@@ -18,7 +18,7 @@ description: >
    - If the user provided a task description: use it
    - If not: ask "What are we working on today?" (one question only)
 
-3. **For non-trivial tasks (> ~30 min): draft a requirements spec**
+3. **For non-trivial tasks (> ~5 steps): draft a requirements spec**
    - Create `quality_reports/plans/CURRENT_PLAN.md` using the template at `templates/requirements-spec.md`
    - Fill in: task name, MUST/SHOULD/MAY priorities, clarity status (CLEAR / ASSUMED / BLOCKED)
    - Present the spec to the user for approval before proceeding
