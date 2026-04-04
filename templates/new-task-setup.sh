@@ -125,25 +125,6 @@ if [ ! -e templates ]; then
   echo "Linked: templates → $CORE_REPO/templates"
 fi
 
-# Domain-specific folders
-case "$BRANCH_TYPE" in
-  research)
-    mkdir -p slides related_work output/figures preambles
-    echo "Created: research structure"
-    ;;
-  analysis)
-    mkdir -p data/{raw,processed} output/{figures,tables,reports} scripts/notebooks
-    echo "Created: analysis structure"
-    ;;
-  dev)
-    mkdir -p src tests docs scripts
-    echo "Created: dev structure"
-    ;;
-  exploration)
-    mkdir -p explorations output
-    echo "Created: exploration structure"
-    ;;
-esac
 
 # ── .mcp.json ─────────────────────────────────────────────────────────────────
 

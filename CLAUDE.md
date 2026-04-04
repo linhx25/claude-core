@@ -77,7 +77,6 @@ Task branches may override `/score` with domain-specific extensions — see `.cl
 | `/critique [file]` | Run adversarial critic subagent on any file |
 | `/learn [topic]` | Extract non-obvious session discovery into MEMORY.md |
 | `/memory-prune` | Quarterly review — remove stale entries, promote principles |
-| `/devils-advocate` | Challenge current design decisions |
 
 *Task-specific skills live on task branches, not here.*
 
@@ -219,5 +218,4 @@ When you start a task branch, the project looks like:
 - Read MEMORY.md at session start — it contains hard-won learnings
 - If context is > 70% full, run `/context-status` and consider compacting
 - When spawning subagents: use `researcher` for lookup tasks, `critic` for review
-- Never edit files in `data/raw/` — it's read-only by convention
 - Snapshots in `.claude/snapshots/` are auto-generated — never manually edit them
