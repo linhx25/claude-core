@@ -24,8 +24,7 @@ claude-core/
 │   │   ├── context-status.md    ← /context-status
 │   │   ├── critique.md          ← /critique
 │   │   ├── learn.md             ← /learn
-│   │   ├── memory-prune.md      ← /memory-prune
-│   │   └── devils-advocate.md   ← /devils-advocate
+│   │   └── memory-prune.md      ← /memory-prune
 │   └── hooks/
 │       ├── pre-compact.sh       ← Saves plan snapshot before compression
 │       ├── session-start.sh     ← Injects MEMORY.md at session start
@@ -67,16 +66,15 @@ claude
 | **Agents** | `.claude/agents/` | Specialized subagents spawned for review/research |
 | **MCP** | user `~/.claude.json` + project `.mcp.json` | External tool connections |
 
-## Key Design Decisions
+## Tips
 
-**Why symlinks instead of copies?**  
-Copies drift. When you improve a core hook or skill, copies don't benefit. Symlinks to `core-commands`, `core-hooks`, and `core-agents` ensure all tasks get updates automatically. Task-level additions live in the task's own `.claude/` directories.
+**Daily Reset Usage Limit**  
+Set up a scheduled task from the Claude app by sending you a "hello" message at specific time to reset the hour usage limit. For example, if your work starts at 8AM, schedule the hello message on 5~6 AM to start the session limit countdown earlier.
 
-**Why is `settings.json` copied, not symlinked?**  
-Tasks may need different permissions or to enable agent teams. Copying lets each task customize without affecting core.
+**/clear**  
+Use /clear when you switch to a new topic or new task, it will clean up the long context
 
-**Why are agent teams disabled by default?**  
-They cost ~3–7× tokens. Enable only when tasks are genuinely parallel with non-overlapping file boundaries. Set `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS: "1"` in the task's `settings.json`.
+
 
 ## Promoting Work Back to Core
 

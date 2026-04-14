@@ -32,7 +32,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/pre-compact.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/pre-compact.sh"
           }
         ]
       }
@@ -44,7 +44,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/session-start.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/session-start.sh"
           }
         ]
       }
@@ -56,7 +56,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/log-edit.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/log-edit.sh"
           }
         ]
       }
@@ -68,7 +68,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/session-stop.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/session-stop.sh"
           }
         ]
       }

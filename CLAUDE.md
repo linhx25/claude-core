@@ -148,17 +148,6 @@ Agent teams are disabled by default. Enable in `.claude/settings.json` when need
 Use agent teams **only** when tasks are genuinely parallel with non-overlapping files.
 For sequential tasks or same-file edits: single session or subagents.
 
----
-
-## Branch Naming Convention
-
-```
-main                    ← this core (never used directly for tasks)
-research/[paper-name]   ← writing, LaTeX, literature review
-analysis/[project-name] ← Python, data, notebooks
-dev/[project-name]      ← software, APIs, deployment
-exploration/[idea]      ← throwaway experiments (60/100 threshold)
-```
 
 ---
 
@@ -172,7 +161,8 @@ When you start a task branch, the project looks like:
 ├── MEMORY.md                    ← accumulated learnings (append-only)
 ├── .claude/                     ← symlinked to claude-core, + task overrides
 │   ├── agents/                  ← core agents + task-specific agents
-│   ├── commands/                ← core skills + task-specific skills
+│   ├── commands/                ← core skills 
+│   ├── skills/                  ← task-specific skills
 │   ├── hooks/                   ← hook scripts referenced by settings.json
 │   ├── settings.json            ← hooks config, permissions, env vars
 │   └── snapshots/               ← auto-saved plan snapshots (gitignored)
