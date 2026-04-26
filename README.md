@@ -17,23 +17,34 @@ claude-core/
 │   │   ├── critic.md            ← Adversarial reviewer (any artifact)
 │   │   └── researcher.md        ← Isolated lookup agent
 │   ├── commands/                ← Slash skills
-│   │   ├── start-task.md        ← /start-task
-│   │   ├── end-task.md          ← /end-task
-│   │   ├── score.md             ← /score  (universal rubric — no external script)
-│   │   ├── commit.md            ← /commit
-│   │   ├── context-status.md    ← /context-status
-│   │   ├── critique.md          ← /critique
-│   │   ├── learn.md             ← /learn
-│   │   └── memory-prune.md      ← /memory-prune
-│   └── hooks/
-│       ├── pre-compact.sh       ← Saves plan snapshot before compression
-│       ├── session-start.sh     ← Injects MEMORY.md at session start
-│       ├── log-edit.sh          ← Logs file edits during session
-│       └── session-stop.sh      ← Reminds to update MEMORY.md at end
+│   │   ├── start-task.md            ← /start-task
+│   │   ├── end-task.md              ← /end-task
+│   │   ├── score.md                 ← /score (loads task-specific rubric from templates/rubrics/)
+│   │   ├── commit.md                ← /commit
+│   │   ├── context-status.md        ← /context-status
+│   │   ├── critique.md              ← /critique (task-specific attack surface from rubric template)
+│   │   ├── learn.md                 ← /learn
+│   │   ├── memory-prune.md          ← /memory-prune
+│   │   ├── promote.md               ← /promote (cherry-pick generic work to main)
+│   │   ├── framework-doctor.md      ← /framework-doctor (audit core for drift)
+│   │   └── build-rubric-template.md ← /build-rubric-template (4-phase interview to build new rubrics)
+│   ├── hooks/
+│   │   ├── pre-compact.sh       ← Saves plan snapshot before compression
+│   │   ├── session-start.sh     ← Injects MEMORY.md at session start
+│   │   ├── log-edit.sh          ← Logs file edits during session
+│   │   └── session-stop.sh      ← Reminds to update MEMORY.md at end
+│   └── skills/
+│       └── skill-creator/       ← Anthropic's official skill-creation toolkit
+│                                  (use to author new commands or subagents)
 └── templates/
     ├── requirements-spec.md     ← MUST/SHOULD/MAY plan template
     ├── session-log.md           ← Session summary template
-    └── new-task-setup.sh        ← Script to bootstrap a new task branch
+    ├── new-task-setup.sh        ← Script to bootstrap a new task branch
+    └── rubrics/                 ← Task-specific rubric library
+        ├── _format.md           ← Rubric file format spec
+        ├── academic/            ← Hand-tuned rubrics for academic artifacts
+        ├── coding/              ← Hand-tuned rubrics for code
+        └── general/             ← Auto-built rubrics for other artifact types
 ```
 
 ## Setup
