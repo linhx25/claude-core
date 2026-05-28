@@ -70,6 +70,10 @@ Context: The claude-core repo is used across research/analysis/dev branches with
 [LEARN:design] Writing rules as flat "thou shalt" statements → constitutional articles distinguish immutable principles (non-negotiable for quality/reproducibility) from flexible preferences. Keep to 3–7 articles max. Each article includes an amendment process: "overriding for this task (one-time exception)" vs "amending Article X (permanent)".
 Context: Amendment process preserves institutional memory across sessions.
 
+## [2026-04-26] — Calibrate rubrics against a known-good exemplar
+[LEARN:design] Building a rubric without checking it against a real high-quality artifact → identify a previously-scored reference (e.g., AdSeqUser.tex scored 93/100) and confirm the new rubric scores it in the expected band. Off-by-5+ points either reveals miscalibration or surfaces real issues the old rubric missed.
+Context: Verification step for any new rubric template. Catches both mis-tuned weights and "the rubric is doing its job" gaps that look like bugs.
+
 ---
 
 ## File Organization

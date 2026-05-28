@@ -77,6 +77,13 @@ Task branches may override `/score` with domain-specific extensions — see `.cl
 | `/critique [file]` | Run adversarial critic subagent on any file |
 | `/learn [topic]` | Extract non-obvious session discovery into MEMORY.md |
 | `/memory-prune` | Quarterly review — remove stale entries, promote principles |
+| `/promote` | Cherry-pick generic work from a task branch back to main |
+| `/framework-doctor` | Audit the core framework for drift, broken hooks, vague skills |
+| `/build-rubric-template` | Build a new task-specific rubric via comprehensive 4-phase interview |
+
+*Rubric library lives at `templates/rubrics/{academic,coding,general}/`. See `templates/rubrics/_format.md` for the file format. `/score` and `/critique` auto-load the matching rubric by file extension.*
+
+*Authoring new slash-commands or subagents: use the `skill-creator` package at `.claude/skills/skill-creator/` for the official Anthropic interview methodology.*
 
 *Task-specific skills live on task branches, not here.*
 
