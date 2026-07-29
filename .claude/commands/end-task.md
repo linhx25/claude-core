@@ -12,7 +12,7 @@ description: >
    - What was completed (done ✓)
    - What is in progress (in progress →)
    - What was deferred or blocked (blocked ✗)
-   - Write this to `quality_reports/session-logs/session_YYYY-MM-DD.md` using `templates/session-log.md`
+   - Write this to `reports/session-logs/session_YYYY-MM-DD.md` using `templates/session-log.md`
 
 2. **Extract learnings**
    - Review the session: was anything non-obvious discovered?

@@ -36,7 +36,7 @@ Context: [one sentence on when this matters]
 Context: Catches ambiguity early; reduces rework 30–50% on complex tasks.
 
 ## [2026-03-08] — Spec-then-plan protocol
-[LEARN:workflow] Asking clarifying questions verbally → use the formal spec protocol: AskUserQuestion (3–5 questions max) → create `quality_reports/specs/YYYY-MM-DD_description.md` → declare CLEAR/ASSUMED/BLOCKED per requirement → get approval → then draft plan.
+[LEARN:workflow] Asking clarifying questions verbally → use the formal spec protocol: AskUserQuestion (3–5 questions max) → create `reports/specs/YYYY-MM-DD_description.md` → declare CLEAR/ASSUMED/BLOCKED per requirement → get approval → then draft plan.
 Context: The written spec survives compression and session boundaries; verbal clarification doesn't.
 
 ## [2026-03-08] — Context survival checklist before compression
@@ -44,7 +44,7 @@ Context: The written spec survives compression and session boundaries; verbal cl
 Context: Plans/specs/logs must live on disk, not in conversation, to survive compression and session boundaries.
 
 ## [2026-03-08] — Template meta-work vs user work
-[LEARN:workflow] Creating session logs for template-building work → session logs in `quality_reports/` are for user work (slides, analysis, papers), not meta-work (building the repo infrastructure). Keeps the template clean for users who fork it.
+[LEARN:workflow] Creating session logs for template-building work → session logs in `reports/` are for user work (slides, analysis, papers), not meta-work (building the repo infrastructure). Keeps the template clean for users who fork it.
 Context: Only applies to work on the claude-core repo itself, not task branches.
 
 ---
@@ -79,8 +79,8 @@ Context: Verification step for any new rubric template. Catches both mis-tuned w
 ## File Organization
 
 ## [2026-03-08] — Specs location
-[LEARN:files] Saving specification files in repo root or ad-hoc locations → specs go in `quality_reports/specs/YYYY-MM-DD_description.md`. Session logs in `quality_reports/session-logs/`. Maintains structure.
-Context: Pre-compact hook and /start-task look for plans in `quality_reports/plans/CURRENT_PLAN.md`.
+[LEARN:files] Saving specification files in repo root or ad-hoc locations → specs go in `reports/specs/YYYY-MM-DD_description.md`. Session logs in `reports/session-logs/`. Maintains structure.
+Context: Pre-compact hook and /start-task look for plans in `reports/plans/CURRENT_PLAN.md`.
 
 ---
 

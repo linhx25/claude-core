@@ -17,7 +17,7 @@ See `templates/new-task-setup.sh` for the setup script.
 
 ## Non-Negotiables (Always Enforced)
 
-1. **Plan before acting** — for any non-trivial task (>~5 steps), write a spec in `quality_reports/plans/` and get approval before touching files
+1. **Plan before acting** — for any non-trivial task (>~5 steps), write a spec in `reports/plans/` and get approval before touching files
 2. **Run the artifact** — never claim completion without compiling, executing, or opening the output
 3. **Score before committing** — nothing below 80/100 gets committed; run `/score [file]` before every commit
 4. **Single source of truth** — one place defines each piece of content; no duplication
@@ -139,22 +139,8 @@ claude mcp add brave-search --transport stdio \
 
 `filesystem` is configured per-task in `.mcp.json` — automatically scoped to the project root.
 
-**Check status inside Claude Code:** `/mcp`
 
 Keep total active MCP tools < 80. With Tool Search (auto-enabled on Sonnet/Opus 4), tool definitions load on demand — ~85% context reduction.
-
----
-
-## Agent Teams (Experimental)
-
-Agent teams are disabled by default. Enable in `.claude/settings.json` when needed:
-```json
-{ "env": { "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1" } }
-```
-
-Use agent teams **only** when tasks are genuinely parallel with non-overlapping files.
-For sequential tasks or same-file edits: single session or subagents.
-
 
 ---
 
@@ -174,7 +160,7 @@ When you start a task branch, the project looks like:
 │   ├── settings.json            ← hooks config, permissions, env vars
 │   └── snapshots/               ← auto-saved plan snapshots (gitignored)
 ├── .mcp.json                    ← MCP servers for this task
-├── quality_reports/
+├── reports/
 │   ├── plans/                   ← active plan (CURRENT_PLAN.md lives here)
 │   ├── specs/                   ← requirements specs (YYYY-MM-DD_description.md)
 │   └── session-logs/            ← session summaries (gitignored — personal work diary)
@@ -184,30 +170,6 @@ When you start a task branch, the project looks like:
 
 **Not in the repo (machine-local only):**
 - `~/.claude/personal.md` — your preferences, background, machine config (injected at session start)
-
----
-
-## Python Conventions (When Applicable)
-
-- **Style:** PEP 8, type hints, Google-style docstrings, `black`/`ruff`
-- **Reproducibility:** seed at top (`numpy.random.seed()`, `torch.manual_seed()`); relative paths only; `requirements.txt` or `pyproject.toml`
-- **Visualization:** 300 DPI, consistent palette, `matplotlib`/`seaborn`
-- **Notebooks:** restart-and-run-all must succeed; clear output before committing
-
----
-
-## Active Task
-
-*(Update when starting a task branch)*
-
-| Field | Value |
-|-------|-------|
-| Task name | — |
-| Branch | `main` |
-| Started | — |
-| Current status | No active task |
-| Next action | — |
-
 ---
 
 ## Reminders to Claude

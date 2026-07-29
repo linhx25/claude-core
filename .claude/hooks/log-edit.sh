@@ -23,7 +23,7 @@ print(data.get('tool_name', 'Edit'))
 " 2>/dev/null || echo "Edit")
 
 TIMESTAMP=$(date +%H:%M:%S)
-LOG_DIR="${CLAUDE_PROJECT_DIR:-$(pwd)}/quality_reports/session-logs"
+LOG_DIR="${CLAUDE_PROJECT_DIR:-$(pwd)}/reports/session-logs"
 mkdir -p "$LOG_DIR"
 
 # Write to today's session log

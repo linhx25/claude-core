@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-LOG_DIR="${CLAUDE_PROJECT_DIR:-$(pwd)}/quality_reports/session-logs"
+LOG_DIR="${CLAUDE_PROJECT_DIR:-$(pwd)}/reports/session-logs"
 TODAY=$(date +%Y-%m-%d)
 LOG_FILE="$LOG_DIR/session_${TODAY}.log"
 

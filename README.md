@@ -102,7 +102,7 @@ Run from the task branch:
 The skill walks through these steps automatically:
 
 1. **Confirms branch** — refuses to run from `main`.
-2. **Diffs against main** — `git diff main --name-status -- .claude/ templates/`, skipping auto-generated paths (`.claude/snapshots/`, `quality_reports/session-logs/`, `*.local.*`).
+2. **Diffs against main** — `git diff main --name-status -- .claude/ templates/`, skipping auto-generated paths (`.claude/snapshots/`, `reports/session-logs/`, `*.local.*`).
 3. **Classifies each change** as **generic** or **domain-specific** using three questions:
    - Is the purpose tied to this task's domain?
    - Would a user on a different branch type (research / analysis / dev) benefit?

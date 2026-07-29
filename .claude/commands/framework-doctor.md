@@ -26,7 +26,7 @@ For each file under these directories:
 Grep for the basename in `README.md` and `CLAUDE.md`. Flag any file referenced
 in **neither**.
 
-Skip auto-generated paths: `.claude/snapshots/`, `quality_reports/session-logs/`,
+Skip auto-generated paths: `.claude/snapshots/`, `reports/session-logs/`,
 `*.local.*`.
 
 Also skip `templates/rubrics/*/*.md` — individual rubric files are audited

@@ -29,7 +29,7 @@ For each changed file, note status:
 - **D** — deleted (removed something on the branch)
 
 Skip auto-generated and gitignored paths: `.claude/snapshots/`,
-`quality_reports/session-logs/`, `*.local.*`.
+`reports/session-logs/`, `*.local.*`.
 
 ### 3. Classify each change
 

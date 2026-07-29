@@ -3,7 +3,7 @@ name: start-task
 description: >
   Begin a new task. Reads CLAUDE.md and MEMORY.md, checks the current branch,
   asks for a task description if not provided, and drafts a requirements spec
-  in quality_reports/plans/. Use this at the start of every session on a task branch.
+  in reports/plans/. Use this at the start of every session on a task branch.
 ---
 
 ## Start Task Workflow
@@ -19,7 +19,7 @@ description: >
    - If not: ask "What are we working on today?" (one question only)
 
 3. **For non-trivial tasks (> ~5 steps): draft a requirements spec**
-   - Create `quality_reports/plans/CURRENT_PLAN.md` using the template at `templates/requirements-spec.md`
+   - Create `reports/plans/CURRENT_PLAN.md` using the template at `templates/requirements-spec.md`
    - Fill in: task name, MUST/SHOULD/MAY priorities, clarity status (CLEAR / ASSUMED / BLOCKED)
    - Present the spec to the user for approval before proceeding
 

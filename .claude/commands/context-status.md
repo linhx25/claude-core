@@ -16,8 +16,8 @@ Report the following in a compact table:
 |------|--------|
 | Active branch | `git branch --show-current` |
 | Context usage | Estimate: [low / medium / high / critical] |
-| Active plan | Check if `quality_reports/plans/CURRENT_PLAN.md` exists |
-| Session log | Check `quality_reports/session-logs/session_YYYY-MM-DD.md` |
+| Active plan | Check if `reports/plans/CURRENT_PLAN.md` exists |
+| Session log | Check `reports/session-logs/session_YYYY-MM-DD.md` |
 | Latest snapshot | Check `.claude/snapshots/` — most recent plan_*.md |
 
 ### Recommendation

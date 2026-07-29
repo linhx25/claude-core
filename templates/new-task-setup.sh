@@ -118,7 +118,7 @@ fi
 
 # ── Project structure ─────────────────────────────────────────────────────────
 
-mkdir -p quality_reports/{plans,session-logs}
+mkdir -p reports/{plans,session-logs}
 
 if [ ! -e templates ]; then
   ln -s "$CORE_REPO/templates" templates
@@ -148,17 +148,31 @@ fi
 
 if [ ! -f .gitignore ]; then
   cat > .gitignore << 'EOF'
-# Build artifacts
-*.aux *.log *.out *.toc *.fls *.fdb_latexmk *.synctex.gz *.bbl *.blg
+# Build artifacts (one pattern per line — git ignores space-separated lists)
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
 
 # Python
-__pycache__/ *.pyc .ipynb_checkpoints/ .mypy_cache/ .ruff_cache/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.mypy_cache/
+.ruff_cache/
 
 # Data
 data/raw/
 
 # Secrets
-.env .env.* secrets/
+.env
+.env.*
+secrets/
 
 # macOS
 .DS_Store
@@ -167,7 +181,7 @@ data/raw/
 .claude/snapshots/
 
 # Session logs
-quality_reports/session-logs/
+reports/session-logs/
 EOF
   echo "Created: .gitignore"
 fi

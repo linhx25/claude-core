@@ -10,7 +10,7 @@ SNAPSHOT_DIR="${CLAUDE_PROJECT_DIR:-$(pwd)}/.claude/snapshots"
 mkdir -p "$SNAPSHOT_DIR"
 
 # Save current plan if it exists
-PLAN_FILE="${CLAUDE_PROJECT_DIR:-$(pwd)}/quality_reports/plans/CURRENT_PLAN.md"
+PLAN_FILE="${CLAUDE_PROJECT_DIR:-$(pwd)}/reports/plans/CURRENT_PLAN.md"
 if [ -f "$PLAN_FILE" ]; then
   cp "$PLAN_FILE" "$SNAPSHOT_DIR/plan_${TIMESTAMP}.md"
   echo "pre-compact: saved plan snapshot → .claude/snapshots/plan_${TIMESTAMP}.md"
