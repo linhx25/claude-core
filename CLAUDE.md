@@ -1,10 +1,5 @@
 # CLAUDE.md — Agentic Workflow Core
 
-**Repo:** `claude-core` (generic foundation)  
-**Active branch / task:** `main` — no active task
-
----
-
 ## What This Repo Is
 
 This is the **generic core** for all Claude Code work. It is never used directly for tasks.
@@ -17,11 +12,18 @@ See `templates/new-task-setup.sh` for the setup script.
 
 ## Non-Negotiables (Always Enforced)
 
-1. **Plan before acting** — for any non-trivial task (>~5 steps), write a spec in `reports/plans/` and get approval before touching files
+1. **Plan before acting** — for any non-trivial task (>~5 steps), write the plan in `reports/plans/` and get approval before touching files
 2. **Run the artifact** — never claim completion without compiling, executing, or opening the output
 3. **Score before committing** — nothing below 80/100 gets committed; run `/score [file]` before every commit
 4. **Single source of truth** — one place defines each piece of content; no duplication
 5. **LEARN tags** — when corrected, append `[LEARN:category] wrong → right` to `MEMORY.md`
+6. **Clarity is top priority** - Applies everywhere when communicate with the user (me), document you write:
+    - Never use metaphors, analogies, and corporate jargon (unless it is a standard and common terminology). Write in simple, clear, and direct text. No overused, flowery AI vocabulary (like "delve", "tapestry", "testament", "paradigm shift", "wedge"). 
+    - Say the literal thing. Not "arm the anchor" but "use this paper as the comparison." Not "this has teeth" but "this is a real result." Not "reach a venue" but "get published." Not "the killer experiment" but "the experiment that decides whether the idea works."
+    - When answering a question, three plain parts often help: what I found, why it matters, what you need to decide.
+    - Make your communication simple, but not simpler. Don't be a windbag, be concise. Don't condense complex idea into inscrutable sentences. 
+    - No unexplained acronym. If you need to label terms, make sure you explain with context. Don't assume the user have all the context for the shorthands or referred things.
+    - If the user cannot tell what you mean or what you want, the writing has failed, no matter how precise it feels to you.
 
 ---
 
@@ -29,118 +31,12 @@ See `templates/new-task-setup.sh` for the setup script.
 
 Claude operates as a **contractor**, not an assistant:
 
-- For non-trivial tasks: create requirements spec → get approval → implement → verify → review → score → deliver
-- For trivial tasks (< 5 steps, unambiguous): skip spec, just do it and verify
-- When uncertain: ask one clarifying question, not five
+- For non-trivial tasks: create plan → get approval → implement → verify → review → score → deliver
+- For trivial tasks (< 5 steps, unambiguous): do it and verify
+- When uncertain: ask clarifying questions
 - When blocked: state what's blocked and what decision is needed, then stop
 - Never claim "done" without running the artifact
-- MUST ask APPROVAL if spawn >3 subagents
 
-### Contractor Mode Modes
-
-| Mode | When | Claude's tools |
-|------|------|---------------|
-| **Normal** | Implementation | All tools |
-| **Delegate** (Shift+Tab) | Orchestrating agent teams | Spawn/message/task tools only — no Edit/Write/Bash |
-| **Plan** | Pre-implementation | Read + analysis only |
-
----
-
-## Quality Gates
-
-| Score | Gate | Action |
-|-------|------|--------|
-| < 70 | BLOCK | Do not commit — fix top issue first |
-| 70–79 | WARN | Ask user before committing |
-| 80 | Commit threshold | Good to save |
-| 90 | PR threshold | Ready for review |
-| 95 | Excellence | Aspirational target |
-
-Scoring uses the `/score [file]` command — no external script required.
-Four dimensions: **Correctness** (40%) · **Completeness** (25%) · **Clarity** (20%) · **Reproducibility** (15%).
-Domain overlays (research / analysis / dev) apply additional criteria on top.
-`/commit` runs scoring automatically on staged files if not already scored.
-
-Task branches may override `/score` with domain-specific extensions — see `.claude/commands/score.md`.
-
----
-
-## Skills Quick Reference
-
-| Command | What It Does |
-|---------|-------------|
-| `/start-task` | Read CLAUDE.md, check branch, draft requirements spec |
-| `/end-task` | Summarize session, update MEMORY.md, prompt "promote to main?" |
-| `/score [file]` | Score any artifact against the universal rubric before committing |
-| `/commit [msg]` | Score staged files → stage → commit → optional PR |
-| `/context-status` | Show context usage, session health, active plan |
-| `/critique [file]` | Run adversarial critic subagent on any file |
-| `/learn [topic]` | Extract non-obvious session discovery into MEMORY.md |
-| `/memory-prune` | Quarterly review — remove stale entries, promote principles |
-| `/promote` | Cherry-pick generic work from a task branch back to main |
-| `/framework-doctor` | Audit the core framework for drift, broken hooks, vague skills |
-| `/build-rubric-template` | Build a new task-specific rubric via comprehensive 4-phase interview |
-
-*Rubric library lives at `templates/rubrics/{academic,coding,general}/`. See `templates/rubrics/_format.md` for the file format. `/score` and `/critique` auto-load the matching rubric by file extension.*
-
-*Authoring new slash-commands or subagents: use the `skill-creator` package at `.claude/skills/skill-creator/` for the official Anthropic interview methodology.*
-
-*Task-specific skills live on task branches, not here.*
-
----
-
-## Subagents Available (Core)
-
-| Agent | File | When to Use |
-|-------|------|-------------|
-| `critic` | `.claude/agents/critic.md` | Adversarial review of any artifact |
-| `researcher` | `.claude/agents/researcher.md` | Isolated literature/doc lookup (separate context) |
-
-*Domain agents (proofreader, python-reviewer, etc.) live on task branches.*
-
----
-
-## Hooks (Core — Always Active)
-
-Hooks are configured in `.claude/settings.json`, not as shell scripts.
-
-| Hook Event | What It Does |
-|------------|-------------|
-| `PreCompact` | Saves current plan snapshot before context compression |
-| `PostToolUse` (Write/Edit) | Appends edit to session log |
-| `SessionStart` | Loads MEMORY.md + personal.md into session context |
-| `Stop` | Prompts to update MEMORY.md if session had learnings |
-
----
-
-## MCP Servers
-
-Three servers configured for this workflow. See `docs/mcp-setup-macos.md` for first-time setup.
-
-| Server | Scope | Transport | What it enables |
-|--------|-------|-----------|----------------|
-| `github` | user (`~/.claude.json`) | HTTP | Repos, issues, PRs, code search |
-| `brave-search` | user (`~/.claude.json`) | stdio | Web search during tasks |
-| `filesystem` | project (`.mcp.json`) | stdio | File access scoped to task directory |
-
-**One-time setup (macOS):**
-```bash
-# GitHub — needs a PAT in $GITHUB_PAT (add to ~/.zshrc)
-claude mcp add-json github \
-  '{"type":"http","url":"https://api.githubcopilot.com/mcp","headers":{"Authorization":"Bearer '"$GITHUB_PAT"'"}}' \
-  --scope user
-
-# Brave search — needs a key at https://api.search.brave.com (add BRAVE_API_KEY to ~/.zshrc)
-claude mcp add brave-search --transport stdio \
-  --env BRAVE_API_KEY=$BRAVE_API_KEY \
-  -- npx -y @modelcontextprotocol/server-brave-search \
-  --scope user
-```
-
-`filesystem` is configured per-task in `.mcp.json` — automatically scoped to the project root.
-
-
-Keep total active MCP tools < 80. With Tool Search (auto-enabled on Sonnet/Opus 4), tool definitions load on demand — ~85% context reduction.
 
 ---
 
@@ -156,13 +52,12 @@ When you start a task branch, the project looks like:
 │   ├── agents/                  ← core agents + task-specific agents
 │   ├── commands/                ← core skills 
 │   ├── skills/                  ← task-specific skills
+│   ├── rules/                   ← operational rules (read on demand; see catalog below)
 │   ├── hooks/                   ← hook scripts referenced by settings.json
-│   ├── settings.json            ← hooks config, permissions, env vars
-│   └── snapshots/               ← auto-saved plan snapshots (gitignored)
+│   └── settings.json            ← hooks config, permissions, env vars
 ├── .mcp.json                    ← MCP servers for this task
 ├── reports/
 │   ├── plans/                   ← active plan (CURRENT_PLAN.md lives here)
-│   ├── specs/                   ← requirements specs (YYYY-MM-DD_description.md)
 │   └── session-logs/            ← session summaries (gitignored — personal work diary)
 ├── templates/                   ← symlinked to claude-core/templates
 └── [task-specific folders]
@@ -170,6 +65,26 @@ When you start a task branch, the project looks like:
 
 **Not in the repo (machine-local only):**
 - `~/.claude/personal.md` — your preferences, background, machine config (injected at session start)
+---
+
+## Operational Rules (`.claude/rules/`)
+
+Read on demand when the situation calls for it. CLAUDE.md is the entry point; rules are the detail.
+
+| File | When to read |
+|------|--------------|
+| [`quality-gates.md`](.claude/rules/quality-gates.md) | Running `/score`, deciding whether to commit |
+| [`skills-and-subagents.md`](.claude/rules/skills-and-subagents.md) | Choosing which skill or agent to invoke |
+
+**The six non-negotiables in one breath** (full text in `rules/non-negotiables.md`):
+
+1. Plan before acting (>5 steps → write a spec)
+2. Run the artifact (never claim done without executing)
+3. Score before committing (≥ 80)
+4. Single source of truth (one place per fact)
+5. LEARN tags on correction (`[LEARN:category]` → `MEMORY.md`)
+6. Cite, don't fabricate (`[VERIFY]` over guess)
+
 ---
 
 ## Reminders to Claude
