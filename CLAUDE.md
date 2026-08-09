@@ -76,15 +76,6 @@ Read on demand when the situation calls for it. CLAUDE.md is the entry point; ru
 | [`quality-gates.md`](.claude/rules/quality-gates.md) | Running `/score`, deciding whether to commit |
 | [`skills-and-subagents.md`](.claude/rules/skills-and-subagents.md) | Choosing which skill or agent to invoke |
 
-**The six non-negotiables in one breath** (full text in `rules/non-negotiables.md`):
-
-1. Plan before acting (>5 steps → write a spec)
-2. Run the artifact (never claim done without executing)
-3. Score before committing (≥ 80)
-4. Single source of truth (one place per fact)
-5. LEARN tags on correction (`[LEARN:category]` → `MEMORY.md`)
-6. Cite, don't fabricate (`[VERIFY]` over guess)
-
 ---
 
 ## Reminders to Claude
